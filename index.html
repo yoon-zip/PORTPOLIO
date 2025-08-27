@@ -187,30 +187,30 @@
       z-index: 999;
     }
 
-    /* Skills popup specific styling */
-    #skills-popup ul {
+    /*  popup specific styling */
+    #-popup ul {
       list-style-type: none;
       padding: 0;
     }
 
-    #skills-popup li {
+    #-popup li {
       margin-bottom: 15px;
 ස
 
-    #skills-popup h3 {
+    #-popup h3 {
       margin: 10px 0 5px;
       font-size: 1rem;
       font-weight: bold;
     }
 
-    #skills-popup p {
+    #-popup p {
       margin: 5px 0;
       font-size: 0.9rem;
     }
 
     /* Hobbies popup image styling */
     #hobbies-popup img {
-      max-width: 100%;
+      max-width: auto;
       height: auto;
       margin-top: 10px;
       border-radius: 5px;
@@ -221,9 +221,9 @@
   <div id="clock">00:00</div>
 
   <!-- Desktop Icons -->
-  <div class="desktop-icon" id="skills-icon" style="top: 500px; left: 300px;">
-    <img src="https://github.com/yoon-zip/PORTPOLIO/blob/main/pick2.png?raw=true" alt="Skills">
-    <span>Skills</span>
+  <div class="desktop-icon" id="-icon" style="top: 500px; left: 300px;">
+    <img src="https://github.com/yoon-zip/PORTPOLIO/blob/main/pick2.png?raw=true" alt="">
+    <span></span>
   </div>
   <div class="desktop-icon" id="hobbies-icon" style="top: 200px; left: 900px;">
     <img src="https://github.com/yoon-zip/PORTPOLIO/blob/main/hobby.png?raw=true" alt="Hobbies">
@@ -307,8 +307,10 @@
   <!-- Hobbies Popup -->
   <div class="popup" id="hobbies-popup">
     <span class="popup-close" onclick="closePopup('hobbies-popup')">×</span>
-    <h2>My Hobbies</h2>
-    <p>Things I enjoy doing in my free time.</p>
+    <h2>Badminton Lover</h2>
+    <p>As an amateur badminton player, I’m sponsored by Li-Ning Korea. <p>
+    <p>I also serve as an organizer for a community of people born in 2000, where I’m developing my communication skills.<p>
+    <p> Through badminton, I’ve been learning a lot about teamwork, mindset, and self-control.</p>
     <img src="badminton.png" alt="Badminton">
   </div>
 
@@ -381,7 +383,7 @@
     // Double-click event listeners for desktop icons
     document.getElementById('skills-icon').addEventListener('dblclick', (e) => {
       e.preventDefault();
-      showPopup('skills-popup');
+      showPopup('-popup');
     });
 
     document.getElementById('hobbies-icon').addEventListener('dblclick', (e) => {
