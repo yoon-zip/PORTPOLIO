@@ -1,0 +1,60 @@
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { FaEnvelope, FaChrome, FaCode, FaUser } from "react-icons/fa";
+
+export default function Portfolio() {
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      setTime(`${hours}:${minutes}`);
+    };
+    updateClock();
+    const interval = setInterval(updateClock, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div
+      className="h-screen w-screen flex flex-col justify-between items-center"
+      style={{
+        backgroundImage: "url('/pixel-bg.png')", // 여기에 배경 이미지 경로 넣기
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* 시계 */}
+      <div className="text-white text-5xl font-mono mt-6 drop-shadow-lg">
+        {time}
+      </div>
+
+      {/* Dock */}
+      <motion.div
+        className="flex gap-8 bg-black/40 px-6 py-3 rounded-2xl mb-6"
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
+        <DockIcon icon={<FaUser size={28} />} label="About Me" link="#about" />
+        <DockIcon icon={<FaCode size={28} />} label="Projects" link="#projects" />
+        <DockIcon icon={<FaEnvelope size={28} />} label="Contact" link="#contact" />
+        <DockIcon icon={<FaChrome size={28} />} label="Blog" link="#blog" />
+      </motion.div>
+    </div>
+  );
+}
+
+function DockIcon({ icon, label, link }) {
+  return (
+    <a
+      href={link}
+      className="flex flex-col items-center text-white hover:scale-110 transition"
+    >
+      <div className="p-2 bg-white/20 rounded-xl shadow-md">{icon}</div>
+      <span className="text-xs mt-1">{label}</span>
+    </a>
+  );
+}
