@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>My Life Journey Game (Fixed)</title>
+  <meta charset="UTF-8">
+  <title>My Life Journey Game</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -12,7 +13,7 @@
       align-items: center;
       height: 100vh;
       background-color: #1a1a1a;
-      font-family: 'Courier New', Courier, monospace;
+      font-family: 'Press Start 2P', monospace;
     }
     canvas {
       border: 2px solid #fff;
@@ -22,61 +23,111 @@
 </head>
 <body>
   <script>
-    // --- Game State ---
     let player;
-    let spriteImg = null;      // loaded PNG (if available)
-    let fallbackSprite = null; // procedural fallback graphic
-    let bgX = 0;
-    let speed = 2;
-    let spriteLoaded = false;
-
-    // Replace with your PNG path or URL (CORS-safe if hosted).
-    const spriteURL = "path/to/your/character.png";
-
-    const milestones = [
-      { year: "2018.03", text: "숭실대 글로벌미디어학부 입학", x: 100,  visible: false, scale: 0 },
-      { year: "2018.12", text: "휴학",                         x: 300,  visible: false, scale: 0 },
-      { year: "2019.01", text: "비건카페 리코 다방 창업",       x: 500,  visible: false, scale: 0 },
-      { year: "2020.06", text: "비건카페 리코 다방 종료",       x: 700,  visible: false, scale: 0 },
-      { year: "2020.07", text: "복학, 숭실대 의생명시스템학부 전과", x: 900,  visible: false, scale: 0 },
-      { year: "2020.12", text: "휴학",                         x: 1100, visible: false, scale: 0 },
-      { year: "2020.12", text: "위투게더 내몸에안심 PM",        x: 1300, visible: false, scale: 0 },
-      { year: "2022.06", text: "위투게더 종료",                 x: 1500, visible: false, scale: 0 },
-      { year: "2022.07", text: "네발연구소 창업, 플래닛타임즈 기자", x: 1700, visible: false, scale: 0 },
-      { year: "2023.06", text: "네이버 커넥트재단 Content Manager", x: 1900, visible: false, scale: 0 },
+    let milestones = [
+      { year: "2018.03", text: "Enrolled in Global Media at Soongsil University", x: 100 },
+      { year: "2018.12", text: "Took a leave of absence", x: 300 },
+      { year: "2019.01", text: "Founded Rico Dabang Vegan Cafe", x: 500 },
+      { year: "2020.06", text: "Closed Rico Dabang Vegan Cafe", x: 700 },
+      { year: "2020.07", text: "Returned to Soongsil University, transferred to Biomedical Systems", x: 900 },
+      { year: "2020.12", text: "Took a leave of absence", x: 1100 },
+      { year: "2020.12", text: "PM at WeTogether MyBodySafe", x: 1300 },
+      { year: "2022.06", text: "Ended WeTogether", x: 1500 },
+      { year: "2022.07", text: "Founded FourPaws Lab, Journalist at PlanetTimes", x: 1700 },
+      { year: "2023.06", text: "Content Manager at Naver Connect Foundation", x: 1900 }
     ];
-
-    // --- p5 lifecycle ---
-    function preload() {
-      // Try loading the external sprite. If it fails, we'll keep using fallback.
-      spriteImg = loadImage(
-        spriteURL,
-        () => { spriteLoaded = true; },
-        () => { spriteLoaded = false; }
-      );
-    }
+    let bgX = 0;
+    let speed = 3;
+    let sprite;
+    let frame = 0;
+    let frameCount = 0;
+    let currentMilestone = null;
 
     function setup() {
       createCanvas(800, 400);
-
-      // Always create a fallback sprite so we can draw something even if the PNG isn't available yet.
-      fallbackSprite = createGraphics(8, 8);
-      fallbackSprite.pixelDensity(1);
-      // transparent background on the sprite buffer
-      fallbackSprite.clear();
-      // draw a tiny 8x8 pixel character
-      fallbackSprite.noStroke();
-      fallbackSprite.fill(255);            // head
-      fallbackSprite.rect(2, 0, 4, 2);
-      fallbackSprite.fill(100, 100, 255);  // body
-      fallbackSprite.rect(2, 2, 4, 4);
-      fallbackSprite.fill(255, 255, 0);    // legs
-      fallbackSprite.rect(2, 6, 2, 2);
-
-      player = { x: 50, y: height - 100, w: 32, h: 32 };
-      textFont('Courier New');
+      player = { x: 50, y: height - 50, w: 32, h: 32 };
+      sprite = createGraphics(8, 8);
+      sprite.pixelDensity(1);
+      sprite.background(0, 0);
+      sprite.fill(255);
+      sprite.rect(2, 0, 4, 2); // Head
+      sprite.fill(100, 100, 255);
+      sprite.rect(2, 2, 4, 4); // Body
+      sprite.fill(0, 255, 0); // Green legs
+      sprite.rect(2, 6, 2, 2); // Left leg
+      sprite.rect(4, 6, 2, 2); // Right leg
+      textFont('Press Start 2P');
     }
 
     function draw() {
-      // --- Background grid ---
       background(50);
+      // Continuous movement with arrow keys
+      if (keyIsDown(RIGHT_ARROW)) {
+        bgX += speed; // Move forward
+      } else if (keyIsDown(LEFT_ARROW) && bgX > 0) {
+        bgX -= speed; // Move backward, prevent negative scroll
+      }
+
+      // Draw background
+      fill(100);
+      rect(0, height - 20, width, 20); // Ground
+      stroke(255);
+      line(0, height - 20, 2000, height - 20); // Timeline
+      noStroke();
+
+      // Draw prompt to press arrow keys
+      fill(255);
+      textSize(10);
+      textAlign(CENTER);
+      text("Press Arrow Keys to Move", width / 2, 30);
+
+      // Check for milestones near player
+      currentMilestone = null;
+      for (let m of milestones) {
+        let screenX = m.x - bgX;
+        if (abs(screenX - player.x) < 50) { // Display milestone if player is within 50 pixels
+          currentMilestone = m;
+        }
+        // Draw milestone markers on timeline
+        if (screenX > -50 && screenX < width) {
+          fill(0, 255, 0); // Green milestone marker
+          ellipse(screenX, height - 20, 10, 10); // Milestone marker
+        }
+      }
+
+      // Draw current milestone above player (year above text)
+      if (currentMilestone) {
+        fill(255);
+        textSize(12);
+        textAlign(CENTER);
+        text(currentMilestone.year, player.x, player.y - 80); // Year higher
+        textSize(10);
+        text(currentMilestone.text, player.x, player.y - 50, 150); // Text below
+      }
+
+      // Draw player
+      push();
+      translate(player.x, player.y);
+      scale(4);
+      image(sprite, 0, 0);
+      pop();
+
+      // Animate character legs when moving
+      if (keyIsDown(LEFT_ARROW) || keyIsDown(RIGHT_ARROW)) {
+        frameCount++;
+        if (frameCount % 10 == 0) {
+          frame = (frame + 1) % 2;
+          sprite.fill(0, 255, 0); // Green legs
+          if (frame == 0) {
+            sprite.rect(2, 6, 2, 2); // Left leg forward
+            sprite.rect(4, 6, 2, 1); // Right leg back
+          } else {
+            sprite.rect(2, 6, 2, 1); // Left leg back
+            sprite.rect(4, 6, 2, 2); // Right leg forward
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>
