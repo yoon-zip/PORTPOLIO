@@ -195,7 +195,7 @@
 
     #skills-popup li {
       margin-bottom: 15px;
-    }
+ස
 
     #skills-popup h3 {
       margin: 10px 0 5px;
@@ -207,21 +207,29 @@
       margin: 5px 0;
       font-size: 0.9rem;
     }
+
+    /* Hobbies popup image styling */
+    #hobbies-popup img {
+      max-width: 100%;
+      height: auto;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
   <div id="clock">00:00</div>
 
   <!-- Desktop Icons -->
-  <div class="desktop-icon" id="skills-icon" style="top: 400px; left: 300px;">
+  <div class="desktop-icon" id="skills-icon" style="top: 800px; left: 300px;">
     <img src="https://github.com/yoon-zip/PORTPOLIO/blob/main/pick2.png?raw=true" alt="Skills">
     <span>Skills</span>
   </div>
-  <div class="desktop-icon" id="-icon" style="top: 300px; left: 900px;">
+  <div class="desktop-icon" id="hobbies-icon" style="top: 300px; left: 900px;">
     <img src="https://github.com/yoon-zip/PORTPOLIO/blob/main/hobby.png?raw=true" alt="Hobbies">
     <span>Hobbies</span>
   </div>
-  <div class="desktop-icon" id="life-journey-icon" style="top: 600px; left: 100px;">
+  <div class="desktop-icon" id="life-journey-icon" style="top: 400px; left: 50px;">
     <img src="https://github.com/yoon-zip/PORTPOLIO/blob/main/bag2.png?raw=true" alt="Life Journey">
     <span>Life Journey</span>
   </div>
@@ -239,17 +247,13 @@
       <img src="https://img.icons8.com/ios-filled/50/ffffff/new-post.png" alt="Contact">
       <span>Contact</span>
     </a>
-    <a href="#" id="blog-link">
-      <img src="https://img.icons8.com/ios-filled/50/ffffff/chrome.png" alt="Blog">
-      <span>Blog</span>
+    <a href="https://linkedin.com/in/your-profile" id="blog-link" target="_blank">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/linkedin.png" alt="LinkedIn">
+      <span>LinkedIn</span>
       <div class="social-menu">
         <a href="https://instagram.com/your-profile" target="_blank">
           <img src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png" alt="Instagram">
           <span>Instagram</span>
-        </a>
-        <a href="https://linkedin.com/in/your-profile" target="_blank">
-          <img src="https://img.icons8.com/ios-filled/50/ffffff/linkedin.png" alt="LinkedIn">
-          <span>LinkedIn</span>
         </a>
       </div>
     </a>
@@ -305,6 +309,7 @@
     <span class="popup-close" onclick="closePopup('hobbies-popup')">×</span>
     <h2>My Hobbies</h2>
     <p>Things I enjoy doing in my free time.</p>
+    <img src="badminton.png" alt="Badminton">
   </div>
 
   <script>
@@ -332,11 +337,6 @@
     document.getElementById('about-link').addEventListener('click', (e) => {
       e.preventDefault();
       showPopup('about-popup');
-    });
-
-    document.getElementById('blog-link').addEventListener('click', (e) => {
-      e.preventDefault();
-      showPopup('blog-popup');
     });
 
     // Draggable desktop icons with double-click
@@ -379,7 +379,7 @@
     });
 
     // Double-click event listeners for desktop icons
-    document.getElementById('skills-icon').aㄹddEventListener('dblclick', (e) => {
+    document.getElementById('skills-icon').addEventListener('dblclick', (e) => {
       e.preventDefault();
       showPopup('skills-popup');
     });
