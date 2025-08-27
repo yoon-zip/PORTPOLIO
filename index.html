@@ -65,7 +65,7 @@
     .social-menu {
       display: none;
       position: absolute;
-      bottom: 80px; /* Adjusted to ensure visibility above Blog icon */
+      bottom: 80px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(0,0,0,0.7);
@@ -73,7 +73,7 @@
       border-radius: 10px;
       flex-direction: row;
       gap: 20px;
-      z-index: 1100; /* Higher than dock and other elements */
+      z-index: 1100;
       opacity: 0;
       transition: opacity 0.3s ease, display 0.3s ease;
     }
@@ -187,43 +187,56 @@
       z-index: 999;
     }
 
-    /*  popup specific styling */
-    #-popup ul {
+    /* Skills popup specific styling */
+    #skills-popup ul {
       list-style-type: none;
       padding: 0;
     }
 
-    #-popup li {
+    #skills-popup li {
       margin-bottom: 15px;
-ස
+    }
 
-    #-popup h3 {
+    #skills-popup h3 {
       margin: 10px 0 5px;
       font-size: 1rem;
       font-weight: bold;
     }
 
-    #-popup p {
+    #skills-popup p {
       margin: 5px 0;
       font-size: 0.9rem;
     }
 
     /* Hobbies popup image styling */
     #hobbies-popup img {
-      max-width: auto;
+      max-width: 100%;
       height: auto;
       margin-top: 10px;
       border-radius: 5px;
+    }
+
+    /* Background prompt text */
+    .background-prompt {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: white;
+      font-size: 0.8rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+      font-family: 'Courier New', monospace;
+      opacity: 0.7;
     }
   </style>
 </head>
 <body>
   <div id="clock">00:00</div>
+  <div class="background-prompt">Move and double-click the icons!</div>
 
   <!-- Desktop Icons -->
-  <div class="desktop-icon" id="-icon" style="top: 500px; left: 300px;">
-    <img src="https://github.com/yoon-zip/PORTPOLIO/blob/main/pick2.png?raw=true" alt="">
-    <span></span>
+  <div class="desktop-icon" id="skills-icon" style="top: 500px; left: 300px;">
+    <img src="https://github.com/yoon-zip/PORTPOLIO/blob/main/pick2.png?raw=true" alt="Skills">
+    <span>Skills</span>
   </div>
   <div class="desktop-icon" id="hobbies-icon" style="top: 200px; left: 900px;">
     <img src="https://github.com/yoon-zip/PORTPOLIO/blob/main/hobby.png?raw=true" alt="Hobbies">
@@ -239,9 +252,9 @@
       <img src="https://img.icons8.com/ios-filled/50/ffffff/user.png" alt="About">
       <span>About Me</span>
     </a>
-    <a href="projects.html" id="projects-link" target="_blank">
-      <img src="https://img.icons8.com/ios-filled/50/ffffff/code.png" alt="Projects">
-      <span>Projects</span>
+    <a href="portfolio.html" id="portfolio-link" target="_blank">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/code.png" alt="Portfolio">
+      <span>Portfolio</span>
     </a>
     <a href="mailto:dbstj000225@naver.com">
       <img src="https://img.icons8.com/ios-filled/50/ffffff/new-post.png" alt="Contact">
@@ -254,6 +267,10 @@
         <a href="https://instagram.com/your-profile" target="_blank">
           <img src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png" alt="Instagram">
           <span>Instagram</span>
+        </a>
+        <a href="https://www.notion.so/your-notion-page" target="_blank">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/notion.png" alt="Notion">
+          <span>Notion</span>
         </a>
       </div>
     </a>
@@ -308,9 +325,9 @@
   <div class="popup" id="hobbies-popup">
     <span class="popup-close" onclick="closePopup('hobbies-popup')">×</span>
     <h2>Badminton Lover</h2>
-    <p>As an amateur badminton player, I’m sponsored by Li-Ning Korea. <p>
-    <p>I also serve as an organizer for a community of people born in 2000, where I’m developing my communication skills.<p>
-    <p> Through badminton, I’ve been learning a lot about teamwork, mindset, and self-control.</p>
+    <p>As an amateur badminton player, I’m sponsored by Li-Ning Korea.</p>
+    <p>I also serve as an organizer for a community of people born in 2000, where I’m developing my communication skills.</p>
+    <p>Through badminton, I’ve been learning a lot about teamwork, mindset, and self-control.</p>
     <img src="badminton.png" alt="Badminton">
   </div>
 
@@ -383,7 +400,7 @@
     // Double-click event listeners for desktop icons
     document.getElementById('skills-icon').addEventListener('dblclick', (e) => {
       e.preventDefault();
-      showPopup('-popup');
+      showPopup('skills-popup');
     });
 
     document.getElementById('hobbies-icon').addEventListener('dblclick', (e) => {
