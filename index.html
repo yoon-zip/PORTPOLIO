@@ -14,6 +14,8 @@
       align-items: center;
       background: url('pixel-bg.png') no-repeat center center/cover;
       font-family: 'Courier New', monospace;
+      position: relative;
+      overflow: hidden;
     }
 
     #clock {
@@ -40,7 +42,6 @@
       color: white;
       text-decoration: none;
       transition: transform 0.2s;
-      cursor: move; /* Indicates the icon is draggable */
     }
 
     .dock a:hover {
@@ -55,6 +56,36 @@
 
     .dock span {
       font-size: 12px;
+    }
+
+    /* Desktop icon styles */
+    .desktop-icon {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .desktop-icon img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 5px;
+    }
+
+    .desktop-icon span {
+      font-size: 12px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+      text-align: center;
+      max-width: 80px;
+    }
+
+    .desktop-icon.dragging {
+      opacity: 0.7;
+      transform: scale(1.1);
     }
 
     /* Popup styles */
@@ -99,42 +130,37 @@
       background: rgba(0,0,0,0.5);
       z-index: 999;
     }
-
-    /* Draggable icon styles */
-    .dragging {
-      opacity: 0.7;
-      transform: scale(1.1);
-    }
   </style>
 </head>
 <body>
   <div id="clock">00:00</div>
 
-  <div class="dock" id="dock">
-    <a href="#" id="about-link" draggable="true">
+  <!-- Desktop Icons -->
+  <div class="desktop-icon" id="skills-icon" style="top: 100px; left: 50px;">
+    <img src="skills-icon.png" alt="Skills">
+    <span>Skills</span>
+  </div>
+  <div class="desktop-icon" id="hobbies-icon" style="top: 200px; left: 50px;">
+    <img src="hobbies-icon.png" alt="Hobbies">
+    <span>Hobbies</span>
+  </div>
+
+  <div class="dock">
+    <a href="#" id="about-link">
       <img src="https://img.icons8.com/ios-filled/50/ffffff/user.png" alt="About">
       <span>About Me</span>
     </a>
-    <a href="projects.html" id="projects-link" target="_blank" draggable="true">
+    <a href="projects.html" id="projects-link" target="_blank">
       <img src="https://img.icons8.com/ios-filled/50/ffffff/code.png" alt="Projects">
       <span>Projects</span>
     </a>
-    <a href="mailto:dbstj000225@naver.com" draggable="true">
+    <a href="mailto:dbstj000225@naver.com">
       <img src="https://img.icons8.com/ios-filled/50/ffffff/new-post.png" alt="Contact">
       <span>Contact</span>
     </a>
-    <a href="#" id="blog-link" draggable="true">
+    <a href="#" id="blog-link">
       <img src="https://img.icons8.com/ios-filled/50/ffffff/chrome.png" alt="Blog">
       <span>Blog</span>
-    </a>
-    <!-- New draggable icons with popups -->
-    <a href="#" id="skills-link" draggable="true">
-      <img src="skills-icon.png" alt="Skills">
-      <span>Skills</span>
-    </a>
-    <a href="#" id="hobbies-link" draggable="true">
-      <img src="hobbies-icon.png" alt="Hobbies">
-      <span>Hobbies</span>
     </a>
   </div>
 
@@ -190,7 +216,7 @@
       document.getElementById('popup-overlay').style.display = 'none';
     }
 
-    // Event listeners for popup links
+    // Event listeners for dock links
     document.getElementById('about-link').addEventListener('click', (e) => {
       e.preventDefault();
       showPopup('about-popup');
@@ -201,52 +227,51 @@
       showPopup('blog-popup');
     });
 
-    document.getElementById('skills-link').addEventListener('click', (e) => {
+    // Draggable desktop icons with double-click
+    const desktopIcons = document.querySelectorAll('.desktop-icon');
+    desktopIcons.forEach(icon => {
+      let isDragging = false;
+      let currentX;
+      let currentY;
+      let initialX;
+      let initialY;
+
+      icon.addEventListener('mousedown', (e) => {
+        initialX = e.clientX - currentX;
+        initialY = e.clientY - currentY;
+        isDragging = true;
+        icon.classList.add('dragging');
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          e.preventDefault();
+          currentX = e.clientX - initialX;
+          currentY = e.clientY - initialY;
+          icon.style.left = `${currentX}px`;
+          icon.style.top = `${currentY}px`;
+        }
+      });
+
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+        icon.classList.remove('dragging');
+      });
+
+      // Initialize position
+      currentX = parseInt(icon.style.left) || 0;
+      currentY = parseInt(icon.style.top) || 0;
+    });
+
+    // Double-click event listeners for desktop icons
+    document.getElementById('skills-icon').addEventListener('dblclick', (e) => {
       e.preventDefault();
       showPopup('skills-popup');
     });
 
-    document.getElementById('hobbies-link').addEventListener('click', (e) => {
+    document.getElementById('hobbies-icon').addEventListener('dblclick', (e) => {
       e.preventDefault();
       showPopup('hobbies-popup');
-    });
-
-    // Drag and drop functionality
-    const dock = document.getElementById('dock');
-    const items = dock.querySelectorAll('a[draggable="true"]');
-
-    items.forEach(item => {
-      item.addEventListener('dragstart', (e) => {
-        e.target.classList.add('dragging');
-        e.dataTransfer.setData('text/plain', e.target.id);
-      });
-
-      item.addEventListener('dragend', (e) => {
-        e.target.classList.remove('dragging');
-      });
-    });
-
-    dock.addEventListener('dragover', (e) => {
-      e.preventDefault();
-    });
-
-    dock.addEventListener('drop', (e) => {
-      e.preventDefault();
-      const draggedId = e.dataTransfer.getData('text/plain');
-      const draggedElement = document.getElementById(draggedId);
-      const dropTarget = e.target.closest('a[draggable="true"]');
-
-      if (dropTarget && draggedElement !== dropTarget) {
-        const allItems = Array.from(dock.querySelectorAll('a[draggable="true"]'));
-        const draggedIndex = allItems.indexOf(draggedElement);
-        const targetIndex = allItems.indexOf(dropTarget);
-
-        if (draggedIndex < targetIndex) {
-          dock.insertBefore(draggedElement, dropTarget.nextSibling);
-        } else {
-          dock.insertBefore(draggedElement, dropTarget);
-        }
-      }
     });
   </script>
 </body>
