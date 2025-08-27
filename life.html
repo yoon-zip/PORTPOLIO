@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life Journey</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #222;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+    }
+    canvas {
+      border: 2px solid #fff;
+    }
+    #instructions {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: white;
+      font-size: 16px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+    }
+  </style>
+</head>
+<body>
+  <div id="instructions">Press Right Arrow to start my life journey!</div>
+  <script>
+    let backgroundX = 0;
+    let speed = 0; // Starts at 0, updated when right arrow is pressed
+    const characterX = 200; // Fixed character position
+    let milestones = [
+      { x: 400, year: 2018, text: "University Admission" },
+      { x: 800, year: 2020, text: "Joined WeTogether" }
+    ];
+
+    function setup() {
+      createCanvas(800, 400);
+      textFont('Courier New');
+    }
+
+    function draw() {
+      background(50);
+      // Draw ground
+      fill(100);
+      rect(backgroundX, height - 50, width * 2, 50); // Extended ground for scrolling
+      // Draw character (stationary)
+      fill(255);
+      rect(characterX, height - 100, 30, 50);
+      // Draw milestones
+      fill(255);
+      textSize(16);
+      textAlign(CENTER);
+      milestones.forEach(m => {
+        let relativeX = m.x + backgroundX; // Adjust milestone position based on background
+        if (relativeX > characterX - 50 && relativeX < characterX + 50) {
+          text(`${m.year}: ${m.text}`, characterX, height - 120);
+        }
+        // Draw milestone markers
+        if (relativeX > 0 && relativeX < width) {
+          fill(255, 255, 0);
+          rect(relativeX, height - 50, 2, 10); // Yellow marker on ground
+        }
+      });
+      // Move background when speed is active
+      backgroundX -= speed;
+      // Loop background
+      if (backgroundX < -width) {
+        backgroundX += width;
+      }
+    }
+
+    function keyPressed() {
+      if (keyCode === RIGHT_ARROW) {
+        speed = 2; // Start moving background
+      }
+    }
+
+    function keyReleased() {
+      if (keyCode === RIGHT_ARROW) {
+        speed = 0; // Stop moving when key is released
+      }
+    }
+  </script>
+</body>
+</html>
