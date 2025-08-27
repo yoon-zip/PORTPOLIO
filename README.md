@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Portfolio</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      background: url('pixel-bg.png') no-repeat center center/cover; /* 배경 이미지 */
+      font-family: 'Courier New', monospace;
+    }
+
+    /* 시계 */
+    #clock {
+      color: white;
+      font-size: 4rem;
+      margin-top: 20px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+    }
+
+    /* Dock */
+    .dock {
+      display: flex;
+      gap: 40px;
+      background: rgba(0,0,0,0.4);
+      padding: 15px 30px;
+      border-radius: 25px;
+      margin-bottom: 20px;
+    }
+
+    .dock a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+
+    .dock a:hover {
+      transform: scale(1.2);
+    }
+
+    .dock img {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 5px;
+    }
+
+    .dock span {
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 시계 -->
+  <div id="clock">00:00</div>
+
+  <!-- Dock -->
+  <div class="dock">
+    <a href="#about">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/user.png" alt="About">
+      <span>About Me</span>
+    </a>
+    <a href="#projects">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/code.png" alt="Projects">
+      <span>Projects</span>
+    </a>
+    <a href="#contact">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/new-post.png" alt="Contact">
+      <span>Contact</span>
+    </a>
+    <a href="#blog">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/chrome.png" alt="Blog">
+      <span>Blog</span>
+    </a>
+  </div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      document.getElementById("clock").textContent = `${hours}:${minutes}`;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>
