@@ -118,11 +118,14 @@
     let stars = [];
     let clouds = [];
     let characterImg;
-
     function setup() {
       let canvas = createCanvas(900, 500);
       canvas.parent('canvas-container');
-      player = { x: 100, y: height - 80, w: 32, h: 32 };
+      
+      // Position player at the first milestone (2018.03)
+      let firstMilestoneX = milestones[0].x;
+      player = { x: 450, y: height - 80, w: 32, h: 32 }; // Center of screen
+      bgX = firstMilestoneX - 450; // Adjust background so first milestone is under player
       
       // Load character image
       characterImg = loadImage('character.png');
