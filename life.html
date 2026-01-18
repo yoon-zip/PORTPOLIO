@@ -96,7 +96,7 @@
   <script>
     let player;
     let milestones = [
-      { year: "2018.03", text: "Enrolled in Global Media\nat Soongsil University", x: 100, color: [255, 200, 100] }
+      { year: "2018.03", text: "Enrolled in Global Media\nat Soongsil University", x: 100, color: [255, 200, 100] },
       { year: "2018.12", text: "Took a leave\nof absence", x: 300, color: [150, 150, 255] },
       { year: "2019.01", text: "Founded Rico Dabang\nVegan Cafe", x: 500, color: [100, 255, 150] },
       { year: "2020.06", text: "Closed Rico Dabang\nVegan Cafe", x: 700, color: [255, 150, 150] },
@@ -118,13 +118,11 @@
     let stars = [];
     let clouds = [];
     let characterImg;
-    
+
     function setup() {
       let canvas = createCanvas(900, 500);
       canvas.parent('canvas-container');
-      
-      player = { x: 100, y: height - 80, w: 32, h: 32 }; // 원래대로 왼쪽에 위치
-      bgX = 0; // 배경도 원래대로
+      player = { x: 100, y: height - 80, w: 32, h: 32 };
       
       // Load character image
       characterImg = loadImage('character.png');
