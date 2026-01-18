@@ -145,7 +145,7 @@
     }
 
     /* Popup styles */
-    .popup {
+        .popup {
       display: none;
       position: fixed;
       top: 50%;
@@ -155,12 +155,31 @@
       padding: 20px;
       border-radius: 10px;
       color: white;
-      max-width: 400px;
-      width: 80%;
+      max-width: 500px;
+      max-height: 70vh;
+      width: 90%;
+      overflow-y: auto;
       z-index: 1000;
       font-family: 'Courier New', monospace;
     }
 
+    .popup::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .popup::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+    }
+
+    .popup::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.3);
+      border-radius: 10px;
+    }
+
+    .popup::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,255,255,0.5);
+    }
     .popup h2 {
       margin-top: 0;
       font-family: 'Press Start 2P', cursive;
