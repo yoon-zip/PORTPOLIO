@@ -9,124 +9,342 @@
     body {
       margin: 0;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      background-color: #1a1a1a;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       font-family: 'Press Start 2P', monospace;
+      padding: 20px;
     }
+    
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .title {
+      color: #fff;
+      font-size: 24px;
+      text-align: center;
+      text-shadow: 4px 4px 0px rgba(0,0,0,0.3);
+      margin-bottom: 10px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
     canvas {
-      border: 2px solid #fff;
+      border: 4px solid #fff;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
       image-rendering: pixelated;
+    }
+    
+    .controls {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      padding: 20px 30px;
+      border-radius: 15px;
+      border: 2px solid rgba(255,255,255,0.3);
+      color: #fff;
+      font-size: 12px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    
+    .controls p {
+      margin: 5px 0;
+    }
+    
+    .arrow-keys {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    
+    .key {
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.4);
+      border-radius: 5px;
+      padding: 10px 15px;
+      font-size: 16px;
+      color: #fff;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.3);
     }
   </style>
 </head>
 <body>
+  <div class="game-container">
+    <div class="title">🎮 MY LIFE JOURNEY 🎮</div>
+    <div id="canvas-container"></div>
+    <div class="controls">
+      <p>🕹️ USE ARROW KEYS TO EXPLORE MY JOURNEY 🕹️</p>
+      <div class="arrow-keys">
+        <div class="key">←</div>
+        <div class="key">→</div>
+      </div>
+    </div>
+  </div>
+
   <script>
     let player;
     let milestones = [
-      { year: "2018.03", text: "Enrolled in Global Media at Soongsil University", x: 100 },
-      { year: "2018.12", text: "Took a leave of absence", x: 300 },
-      { year: "2019.01", text: "Founded Rico Dabang Vegan Cafe", x: 500 },
-      { year: "2020.06", text: "Closed Rico Dabang Vegan Cafe", x: 700 },
-      { year: "2020.07", text: "Returned to Soongsil University, transferred to Biomedical Systems", x: 900 },
-      { year: "2020.12", text: "Took a leave of absence", x: 1100 },
-      { year: "2020.12", text: "PM at WeTogether MyBodySafe", x: 1300 },
-      { year: "2022.06", text: "Ended WeTogether", x: 1500 },
-      { year: "2022.07", text: "Founded FourPaws Lab, Journalist at PlanetTimes", x: 1700 },
-      { year: "2023.06", text: "Content Manager at Naver Connect Foundation", x: 1900 }
+      { year: "2018.03", text: "Enrolled in Global Media\nat Soongsil University", x: 100, color: [255, 200, 100] },
+      { year: "2018.12", text: "Took a leave\nof absence", x: 300, color: [150, 150, 255] },
+      { year: "2019.01", text: "Founded Rico Dabang\nVegan Cafe", x: 500, color: [100, 255, 150] },
+      { year: "2020.06", text: "Closed Rico Dabang\nVegan Cafe", x: 700, color: [255, 150, 150] },
+      { year: "2020.07", text: "Returned to Soongsil,\ntransferred to\nBioinformatics", x: 900, color: [255, 200, 100] },
+      { year: "2020.12", text: "Took a leave\nof absence", x: 1100, color: [150, 150, 255] },
+      { year: "2020.12", text: "BM at WeTogether\nMyAnsim", x: 1300, color: [100, 255, 200] },
+      { year: "2022.06", text: "Ended\nWeTogether", x: 1500, color: [255, 150, 150] },
+      { year: "2022.07", text: "Founded lab for 4,\nJournalist at PlanetTimes", x: 1700, color: [100, 255, 150] },
+      { year: "2023.06", text: "Projext Manager at\nNaver Connect Foundation", x: 1900, color: [255, 200, 100] },
+      { year: "2025.10", text: "Left Naver Connect Foundation", x: 2100, color: [255, 150, 150] },
+      { year: "2026.01", text: "Started Career\nin Singapore 🇸🇬", x: 2300, color: [100, 255, 255] }
     ];
     let bgX = 0;
-    let speed = 3;
+    let speed = 4;
     let sprite;
     let frame = 0;
     let frameCount = 0;
     let currentMilestone = null;
+    let stars = [];
+    let clouds = [];
 
     function setup() {
-      createCanvas(800, 400);
-      player = { x: 50, y: height - 50, w: 32, h: 32 };
+      let canvas = createCanvas(900, 500);
+      canvas.parent('canvas-container');
+      player = { x: 100, y: height - 80, w: 32, h: 32 };
+      
+      // Create pixel art sprite
       sprite = createGraphics(8, 8);
       sprite.pixelDensity(1);
       sprite.background(0, 0);
-      sprite.fill(255);
+      sprite.fill(255, 220, 180); // Skin tone
       sprite.rect(2, 0, 4, 2); // Head
-      sprite.fill(100, 100, 255);
+      sprite.fill(255, 100, 100); // Red shirt
       sprite.rect(2, 2, 4, 4); // Body
-      sprite.fill(0, 255, 0); // Green legs
+      sprite.fill(50, 50, 200); // Blue pants
       sprite.rect(2, 6, 2, 2); // Left leg
       sprite.rect(4, 6, 2, 2); // Right leg
+      
       textFont('Press Start 2P');
+      
+      // Create stars background
+      for (let i = 0; i < 50; i++) {
+        stars.push({
+          x: random(width),
+          y: random(height - 100),
+          size: random(1, 3),
+          alpha: random(100, 255)
+        });
+      }
+      
+      // Create clouds
+      for (let i = 0; i < 5; i++) {
+        clouds.push({
+          x: random(width),
+          y: random(50, 150),
+          size: random(30, 60)
+        });
+      }
     }
 
     function draw() {
-      background(50);
+      // Gradient background
+      drawGradient();
+      
+      // Draw stars
+      for (let star of stars) {
+        fill(255, 255, 255, star.alpha);
+        noStroke();
+        ellipse(star.x, star.y, star.size);
+        star.alpha = 150 + sin(frameCount * 0.05 + star.x) * 100;
+      }
+      
+      // Draw clouds
+      for (let cloud of clouds) {
+        fill(255, 255, 255, 50);
+        noStroke();
+        ellipse(cloud.x - bgX * 0.3, cloud.y, cloud.size, cloud.size * 0.6);
+        ellipse(cloud.x - bgX * 0.3 + cloud.size * 0.4, cloud.y, cloud.size * 0.8, cloud.size * 0.5);
+        ellipse(cloud.x - bgX * 0.3 + cloud.size * 0.8, cloud.y, cloud.size * 0.6, cloud.size * 0.4);
+      }
+      
       // Continuous movement with arrow keys
       if (keyIsDown(RIGHT_ARROW)) {
-        bgX += speed; // Move forward
+        bgX += speed;
       } else if (keyIsDown(LEFT_ARROW) && bgX > 0) {
-        bgX -= speed; // Move backward, prevent negative scroll
+        bgX -= speed;
       }
 
-      // Draw background
-      fill(100);
-      rect(0, height - 20, width, 20); // Ground
-      stroke(255);
-      line(0, height - 20, 2000, height - 20); // Timeline
+      // Draw ground with gradient
+      let groundGradient = drawingContext.createLinearGradient(0, height - 100, 0, height);
+      groundGradient.addColorStop(0, '#4a5568');
+      groundGradient.addColorStop(1, '#2d3748');
+      drawingContext.fillStyle = groundGradient;
+      drawingContext.fillRect(0, height - 100, width, 100);
+      
+      // Draw grass on top
+      fill(76, 175, 80);
+      rect(0, height - 100, width, 5);
+      
+      // Draw timeline
+      stroke(255, 200);
+      strokeWeight(3);
+      line(0, height - 95, width, height - 95);
       noStroke();
-
-      // Draw prompt to press arrow keys
-      fill(255);
-      textSize(10);
-      textAlign(CENTER);
-      text("Press Arrow Keys to Move", width / 2, 30);
 
       // Check for milestones near player
       currentMilestone = null;
       for (let m of milestones) {
         let screenX = m.x - bgX;
-        if (abs(screenX - player.x) < 50) { // Display milestone if player is within 50 pixels
+        
+        // Check if player is near milestone
+        if (abs(screenX - player.x) < 60) {
           currentMilestone = m;
         }
-        // Draw milestone markers on timeline
-        if (screenX > -50 && screenX < width) {
-          fill(0, 255, 0); // Green milestone marker
-          ellipse(screenX, height - 20, 10, 10); // Milestone marker
+        
+        // Draw milestone markers
+        if (screenX > -50 && screenX < width + 50) {
+          // Glow effect
+          fill(m.color[0], m.color[1], m.color[2], 50);
+          ellipse(screenX, height - 95, 30, 30);
+          
+          // Main marker
+          fill(m.color);
+          stroke(255);
+          strokeWeight(2);
+          ellipse(screenX, height - 95, 15, 15);
+          noStroke();
+          
+          // Year label below marker
+          fill(255);
+          textSize(8);
+          textAlign(CENTER);
+          text(m.year, screenX, height - 70);
         }
       }
 
-      // Draw current milestone above player (year above text)
+      // Draw milestone popup
       if (currentMilestone) {
-        fill(255);
-        textSize(12);
-        textAlign(CENTER);
-        text(currentMilestone.year, player.x, player.y - 80); // Year higher
-        textSize(10);
-        text(currentMilestone.text, player.x, player.y - 50, 150); // Text below
+        drawMilestonePopup(currentMilestone);
       }
 
-      // Draw player
+      // Draw player with shadow
       push();
+      // Shadow
+      fill(0, 0, 0, 50);
+      ellipse(player.x + 16, player.y + 40, 30, 10);
+      
+      // Player character
       translate(player.x, player.y);
-      scale(4);
+      scale(5);
       image(sprite, 0, 0);
       pop();
 
       // Animate character legs when moving
       if (keyIsDown(LEFT_ARROW) || keyIsDown(RIGHT_ARROW)) {
         frameCount++;
-        if (frameCount % 10 == 0) {
+        if (frameCount % 8 == 0) {
           frame = (frame + 1) % 2;
-          sprite.fill(0, 255, 0); // Green legs
+          sprite.fill(50, 50, 200); // Blue pants
           if (frame == 0) {
-            sprite.rect(2, 6, 2, 2); // Left leg forward
-            sprite.rect(4, 6, 2, 1); // Right leg back
+            sprite.rect(2, 6, 2, 2);
+            sprite.rect(4, 6, 2, 1);
           } else {
-            sprite.rect(2, 6, 2, 1); // Left leg back
-            sprite.rect(4, 6, 2, 2); // Right leg forward
+            sprite.rect(2, 6, 2, 1);
+            sprite.rect(4, 6, 2, 2);
           }
         }
       }
+      
+      // Progress indicator
+      drawProgressBar();
+    }
+    
+    function drawGradient() {
+      let gradient = drawingContext.createLinearGradient(0, 0, 0, height);
+      gradient.addColorStop(0, '#1a1a2e');
+      gradient.addColorStop(0.5, '#16213e');
+      gradient.addColorStop(1, '#0f3460');
+      drawingContext.fillStyle = gradient;
+      drawingContext.fillRect(0, 0, width, height);
+    }
+    
+    function drawMilestonePopup(milestone) {
+      // Calculate text height
+      textSize(9);
+      let lines = milestone.text.split('\n');
+      let lineHeight = 12;
+      let boxHeight = lines.length * lineHeight + 30;
+      let boxWidth = 220;
+      let boxX = player.x - boxWidth / 2;
+      let boxY = player.y - boxHeight - 60;
+      
+      // Speech bubble tail
+      fill(0, 0, 0, 200);
+      noStroke();
+      triangle(
+        player.x, player.y - 50,
+        player.x - 10, boxY + boxHeight,
+        player.x + 10, boxY + boxHeight
+      );
+      
+      // Popup background with border
+      fill(0, 0, 0, 200);
+      stroke(milestone.color);
+      strokeWeight(3);
+      rect(boxX, boxY, boxWidth, boxHeight, 10);
+      
+      // Inner glow
+      noStroke();
+      fill(milestone.color[0], milestone.color[1], milestone.color[2], 30);
+      rect(boxX + 5, boxY + 5, boxWidth - 10, boxHeight - 10, 8);
+      
+      // Text
+      fill(255);
+      textSize(9);
+      textAlign(CENTER);
+      let textY = boxY + 20;
+      for (let line of lines) {
+        text(line, player.x, textY);
+        textY += lineHeight;
+      }
+    }
+    
+    function drawProgressBar() {
+      let maxX = milestones[milestones.length - 1].x;
+      let progress = constrain(bgX / maxX, 0, 1);
+      
+      // Background
+      fill(0, 0, 0, 100);
+      rect(20, 20, 200, 20, 10);
+      
+      // Progress fill
+      let barColor = lerpColor(color(255, 100, 100), color(100, 255, 100), progress);
+      fill(barColor);
+      rect(20, 20, 200 * progress, 20, 10);
+      
+      // Border
+      noFill();
+      stroke(255);
+      strokeWeight(2);
+      rect(20, 20, 200, 20, 10);
+      noStroke();
+      
+      // Text
+      fill(255);
+      textSize(8);
+      textAlign(LEFT);
+      text("JOURNEY: " + Math.floor(progress * 100) + "%", 25, 35);
     }
   </script>
 </body>
